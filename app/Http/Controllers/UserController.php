@@ -65,9 +65,12 @@ class UserController extends Controller
         
         $user=User::create($request->all());
 
-        $user->password = Hash::make($request->password);
+        if($request->has('password')){
+           $user->password=Hash::make($request->password);
+           $user->save();
+        };
 
-        $user->fill($request->except('password'))->save();
+        
 
 
 
@@ -138,16 +141,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request,User $user)
     {
-        $user = User::findOrFail($id);
+       // $user = User::findOrFail($id);
         
-        
+        $user->fill($request->except('password'))->save();
+
         if($request->has('password')){
            $user->password=Hash::make($request->password);
+           $user->save();
         };
 
-        $user->fill($request->except('password'))->save();
+        
         //$user->fill($request->all())->save();
 
         
